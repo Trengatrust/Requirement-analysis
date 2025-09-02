@@ -441,6 +441,89 @@ Non-functional requirements outline the system's performance characteristics, co
 - **Performance**: Booking views must load quickly, with Redis caching reducing response times for recent data and minimizing direct database queries.
 - **Reliability**: The system must ensure data consistency between Redis and Cassandra, providing accurate booking details without discrepancies.
 - **Scalability**: It must handle shared access by both managers and customers under high traffic, using load balancers and distributed databases to manage increased query volumes.
+
+### Use Case Diagrams
+
+### What Are Use Case Diagrams?
+
+**Use Case Diagrams** are a type of behavioral diagram in the Unified Modeling Language (UML) that visually represent the interactions between a system and its external entities, known as actors, to achieve specific goals. They provide a high-level view of a system's functionality by illustrating what the system does (use cases) and who interacts with it (actors). These diagrams are widely used during the **Requirement Analysis** phase of the Software Development Life Cycle (SDLC) to capture and communicate functional requirements.
+
+#### Components of a Use Case Diagram
+1. **Actors**:
+   - Represent external entities (e.g., users, systems, or devices) that interact with the system.
+   - Examples: A customer, hotel manager, or payment gateway in a hotel booking system.
+   - Depicted as stick figures or labeled with roles outside the system boundary.
+
+2. **Use Cases**:
+   - Represent specific functionalities or goals the system supports, described as actions or services.
+   - Examples: "Search Hotel," "Book Room," or "Update Hotel Details."
+   - Depicted as ovals within the system boundary.
+
+3. **System Boundary**:
+   - A rectangle that defines the scope of the system, enclosing all use cases and separating them from actors.
+
+4. **Relationships**:
+   - **Association**: Lines connecting actors to use cases, indicating interaction (e.g., a customer performs a "Book Room" use case).
+   - **Include**: A relationship where one use case (e.g., "Make Payment") is included in another (e.g., "Book Room") because it’s always required.
+   - **Extend**: A relationship where a use case (e.g., "Apply Discount") optionally extends another (e.g., "Book Room") under specific conditions.
+   - **Generalization**: Indicates a specialized version of a use case or actor (e.g., "Admin" as a specialized "User").
+
+#### Example in Context
+For a hotel booking system like Airbnb or OYO (as described in the provided case study):
+- **Actors**: Customer, Hotel Manager, Payment Service.
+- **Use Cases**: Search Hotel, Book Room, Update Hotel Details, View Booking.
+- **Diagram**: A customer (actor) is connected to "Search Hotel" and "Book Room" use cases, while "Book Room" includes "Make Payment" (via a third-party payment service).
+
+### Benefits of Use Case Diagrams
+
+Use Case Diagrams offer several advantages in the Requirement Analysis phase and throughout the SDLC, particularly for systems like hotel booking applications. Below are their key benefits:
+
+1. **Simplifies Requirement Communication**
+   - **Benefit**: Use Case Diagrams provide a clear, visual representation of system functionality, making it easier for stakeholders (e.g., developers, clients, and non-technical users) to understand what the system does.
+   - **Impact**: In the hotel booking system, a diagram showing a customer performing "Search Hotel" or a manager performing "Update Hotel Details" helps bridge the communication gap between technical teams and stakeholders like hotel owners.
+   - **Example**: A non-technical hotel manager can quickly grasp that the system allows customers to search and book rooms, ensuring their expectations are aligned with the system’s capabilities.
+
+2. **Clarifies System Scope and Boundaries**
+   - **Benefit**: The system boundary in the diagram clearly defines what is included in the system and what is external, helping to manage scope and prevent scope creep.
+   - **Impact**: For the hotel booking system, the diagram distinguishes internal use cases (e.g., "Book Room") from external interactions (e.g., with a third-party payment service), ensuring developers focus on agreed functionalities.
+   - **Example**: The diagram shows that "Make Payment" involves an external payment service, clarifying that payment processing is not part of the core system.
+
+3. **Identifies Stakeholders and Their Needs**
+   - **Benefit**: By explicitly identifying actors, Use Case Diagrams ensure all relevant stakeholders and their interactions with the system are considered during Requirement Analysis.
+   - **Impact**: In the case study, actors like Customer, Hotel Manager, and Payment Service highlight the need to design distinct portals for customers (search/booking) and managers (hotel management), ensuring all user needs are addressed.
+   - **Example**: Recognizing the "Customer" actor ensures requirements like "View Booking" are included for both recent and historical data access.
+
+4. **Facilitates Requirement Elicitation and Validation**
+   - **Benefit**: Use Case Diagrams serve as a tool to elicit and validate requirements by providing a visual starting point for discussions with stakeholders.
+   - **Impact**: During elicitation, stakeholders can review use cases like "Search Hotel" to confirm if features like filtering by location or price are included. During validation, they can verify if the diagram captures all intended functionalities.
+   - **Example**: A workshop with customers might reveal a missing use case like "Cancel Booking," which can be added to the diagram for completeness.
+
+5. **Guides System Design and Development**
+   - **Benefit**: Use Case Diagrams provide a blueprint for designing system architecture and developing features, as they map out key functionalities.
+   - **Impact**: In the hotel booking system, use cases like "Search Hotel" guide the design of the Elasticsearch-based search service, while "Book Room" informs the integration with Redis and payment services.
+   - **Example**: The "Update Hotel Details" use case directs developers to implement APIs that sync data to the CDN and messaging queue, as described in the case study.
+
+6. **Supports Testing and Quality Assurance**
+   - **Benefit**: Each use case can be directly translated into test cases, ensuring that all functionalities are verified during testing.
+   - **Impact**: Testers can create test scenarios for use cases like "View Booking" to check if data is correctly retrieved from Redis (for recent bookings) or Cassandra (for historical bookings), ensuring system reliability.
+   - **Example**: A test case for "Book Room" would verify that the booking service successfully processes payments and updates the database.
+
+7. **Enhances Traceability**
+   - **Benefit**: Use Case Diagrams link requirements to specific functionalities, enabling traceability from requirements to design, development, and testing phases.
+   - **Impact**: In the hotel booking system, the Requirement Traceability Matrix (RTM) can map use cases like "Search Hotel" to specific APIs and database interactions, ensuring all requirements are implemented and tested.
+   - **Example**: The "Make Payment" use case can be traced to the third-party payment service integration, ensuring it’s properly implemented and tested.
+
+8. **Improves Stakeholder Buy-In**
+   - **Benefit**: The simplicity and visual nature of Use Case Diagrams make it easier to gain stakeholder approval, as they can see their requirements reflected clearly.
+   - **Impact**: For the hotel booking system, presenting a diagram to hotel managers showing "Update Hotel Details" ensures they feel confident that their needs are addressed, fostering trust in the project.
+   - **Example**: A customer reviewing the diagram can confirm that "View Booking" includes access to both current and old bookings, aligning with their expectations.
+
+9. **Supports Iterative Development**
+   - **Benefit**: Use Case Diagrams can be refined iteratively as new requirements emerge, making them adaptable to agile or iterative development methodologies.
+   - **Impact**: In the case study, if customers request a new feature like "Receive Notification" (as mentioned in the Final Design), the diagram can be updated to include this use case, supporting agile updates.
+   - **Example**: Adding a "Receive Offer Notification" use case for customers reflects the Kafka consumer for notifications in the architecture.
+
+The link following link is for an example use case diagram: https://drive.google.com/file/d/1xl-0YgXeeonBMkPi7RdqZJuz46z-HmeH/view?usp=drive_link
   
 ### **Conclusion**
 Requirement Analysis is a vital step in ensuring that a system or project meets the needs of its stakeholders while remaining feasible and aligned with business goals. By systematically gathering, analyzing, documenting, validating, and managing requirements, teams can create a solid foundation for successful development, reduce risks, and deliver high-quality outcomes. The five key activities of Requirement Analysis—Gathering, Elicitation, Documentation, Analysis and Modeling, and Validation—work together to create a solid foundation for successful software development. Despite its challenges, effective Requirement Analysis, supported by the right techniques and tools, is essential for transforming stakeholder expectations into a functional and valuable system. Requirement Analysis is indispensable in the SDLC because it ensures the software is built to meet stakeholder needs, aligns with business goals, and adheres to technical and regulatory constraints. By defining a clear scope, reducing risks, minimizing costs, and guiding subsequent phases, it sets the stage for a successful project. Neglecting Requirement Analysis can lead to misaligned products, costly rework, and dissatisfied users, making it a critical step for delivering high-quality software on time and within budget.
