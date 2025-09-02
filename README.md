@@ -382,7 +382,66 @@ Stakeholders may change their minds or introduce new requirements during validat
 Difficulty in reaching consensus among diverse stakeholders.
 Ensuring all requirements are testable and feasible within constraints.
 
+### Types of Requirements
 
+The hotel booking management project, as described in the provided case study, outlines a system architecture inspired by apps like Airbnb and OYO. It divides the system into key services using a microservices approach to handle high user traffic, hotel listings, bookings, payments, and more. Requirements in software development are categorized into **Functional Requirements** (which describe what the system must do, including specific features, behaviors, and interactions) and **Non-Functional Requirements** (which specify how the system performs, including qualities like performance, scalability, reliability, security, and usability).
+
+Below, for each major subsection of the case study (Hotel Management Service, Customer Service (Search + Booking), and View Booking Service), I define these requirement types and provide examples derived directly from the described architecture and functionalities. The Final Design subsection is an overarching summary and does not introduce distinct requirements, so it is not treated separately here.
+
+## Hotel Management Service
+
+This subsection focuses on the backend service for hotel managers/owners to manage hotel-related information via a dedicated portal, involving APIs, load balancing, databases, CDN, and messaging queues.
+
+### Functional Requirements
+Functional requirements define the specific operations, features, and behaviors the system must perform to achieve its goals.
+
+- **Hotel Information Management**: The system must allow hotel managers to update hotel details (e.g., rooms, amenities, pricing) through APIs that interact with the Hotel DB cluster.
+- **Data Synchronization**: Upon updates, the system must sync data from the master database to slave databases and push changes to CDN and messaging queues (e.g., Kafka or RabbitMQ) for further processing.
+- **API Handling for Managers**: The system must process API requests from the hotel manager app, such as adding new hotels or modifying availability, routed via a load balancer to the hotel service cluster.
+
+### Non-Functional Requirements
+Non-functional requirements outline the system's performance characteristics, constraints, and quality attributes.
+
+- **Scalability**: The system must handle high traffic by distributing requests across multiple servers in the hotel service cluster and using master-slave database architecture to manage read/write operations efficiently.
+- **Reliability**: Data updates must be reliably synced between master and slave databases without loss, ensuring consistency for hotel information.
+- **Performance**: API responses for updates must be fast, leveraging CDN for quick delivery of content like hotel images or details to reduce latency.
+
+## Customer Service (Search + Booking)
+
+This subsection describes the customer-facing service for searching and booking hotels, integrating with Elasticsearch, Redis, payment services, and archival databases like Cassandra.
+
+### Functional Requirements
+Functional requirements define the specific operations, features, and behaviors the system must perform to achieve its goals.
+
+- **Hotel Search Functionality**: The system must enable customers to search for hotels using Elasticsearch, retrieving data like nearby hotels, recommendations, and offers via APIs routed through a load balancer.
+- **Booking and Payment Processing**: The system must allow customers to book hotels, interacting with a booking service that integrates with third-party payment services and stores booking data in the booking database cluster.
+- **Data Archival and Caching**: Upon booking changes, the system must send updates to messaging queues for consumers to process and archive in Cassandra, while using Redis to cache temporary data for quick access.
+
+### Non-Functional Requirements
+Non-functional requirements outline the system's performance characteristics, constraints, and quality attributes.
+
+- **Performance**: Searches and bookings must respond quickly, with Elasticsearch providing efficient search engine functionality and Redis reducing database load by caching frequent data accesses.
+- **Scalability**: The system must manage large volumes of customer traffic by distributing requests to search and booking service clusters, and handle growing data sizes by archiving old records in Cassandra to maintain query efficiency.
+- **Usability**: The customer portal must display content smoothly via CDN, ensuring fast loading of recommendations and offers without glitches.
+
+## View Booking Service
+
+This subsection covers the service for viewing current and historical booking details, accessible by both managers and customers, utilizing Redis for caching and Cassandra for archival data.
+
+### Functional Requirements
+Functional requirements define the specific operations, features, and behaviors the system must perform to achieve its goals.
+
+- **Booking Details Retrieval**: The system must allow users (customers or managers) to view current and old bookings by querying data through APIs that access Redis for recent data and Cassandra for archived data.
+- **API Request Handling**: Requests from customer/manager apps must be routed via a load balancer to booking management servers to fetch and display booking information.
+- **Data Access Integration**: The system must integrate caching (Redis) for quick retrieval of recent bookings and long-term storage (Cassandra) for historical data.
+
+### Non-Functional Requirements
+Non-functional requirements outline the system's performance characteristics, constraints, and quality attributes.
+
+- **Performance**: Booking views must load quickly, with Redis caching reducing response times for recent data and minimizing direct database queries.
+- **Reliability**: The system must ensure data consistency between Redis and Cassandra, providing accurate booking details without discrepancies.
+- **Scalability**: It must handle shared access by both managers and customers under high traffic, using load balancers and distributed databases to manage increased query volumes.
+  
 ### **Conclusion**
 Requirement Analysis is a vital step in ensuring that a system or project meets the needs of its stakeholders while remaining feasible and aligned with business goals. By systematically gathering, analyzing, documenting, validating, and managing requirements, teams can create a solid foundation for successful development, reduce risks, and deliver high-quality outcomes. The five key activities of Requirement Analysis—Gathering, Elicitation, Documentation, Analysis and Modeling, and Validation—work together to create a solid foundation for successful software development. Despite its challenges, effective Requirement Analysis, supported by the right techniques and tools, is essential for transforming stakeholder expectations into a functional and valuable system. Requirement Analysis is indispensable in the SDLC because it ensures the software is built to meet stakeholder needs, aligns with business goals, and adheres to technical and regulatory constraints. By defining a clear scope, reducing risks, minimizing costs, and guiding subsequent phases, it sets the stage for a successful project. Neglecting Requirement Analysis can lead to misaligned products, costly rework, and dissatisfied users, making it a critical step for delivering high-quality software on time and within budget.
 
